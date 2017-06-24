@@ -35,6 +35,10 @@ uint8_t getChar64FromCode(uint8_t code) {
     }
 }
 
+uint8_t getCharFromChar64(uint8_t in) {
+
+}
+
 uint8_t getCodeFromHex(char c) {
     if('0' <= c && c <= '9')
         return c - '0';
@@ -63,14 +67,14 @@ void hexCharToArray(const char *in, size_t len, uint8_t *out) {
     }
 }
 
-int hammerWeight32(uint32_t i) {
+int hammingWeight32(uint32_t i) {
     // Number of 1s in each 2-bit slice of i
     i = i - ((i >> 1) & BIT_1010);
     // Number of 1s in each 4-bit slice of i
     i = (i & BIT_0011) + ((i >> 2) & BIT_0011);
     return (((i + (i >> 4)) & HEX_0F) * HEX_01) >> 24;
 }
-int hammerWeight64(uint64_t x) {
+int hammingWeight64(uint64_t x) {
     x -= (x >> 1) & HEX_55;                 // put count of each 2 bits into those 2 bits
     x = (x & HEX_33) + ((x >> 2) & HEX_33); // put count of each 4 bits into those 4 bits
     x = (x + (x >> 4)) & HEX_0F;            // put count of each 8 bits into those 8 bits
@@ -78,23 +82,24 @@ int hammerWeight64(uint64_t x) {
 }
 
 void uint64ToBin(uint64_t c, char *out) {
-    uint64_t mask = 1 << 63;
+    uint64_t mask = 0x8000000000000000; // 1 << 63;
     for(int i = 0; i < 64; i++) {
-        out[i] = c & mask;
+        out[i] = '0' + ((c & mask) > 0 ? 1 : 0);
         mask >>= 1;
     }
     out[64] = '\0';
 }
 
-void printHammerDistance(uint64_t a, uint64_t b) {
+void printHammingDistance(uint64_t a, uint64_t b) {
     char oa[65], ob[65];
     uint64ToBin(a, oa);
     uint64ToBin(b, ob);
 
-    printf("%d %d\n%d\n>>>>>>\n", oa, hammerWeight64(a & b), ob);
+    printf("%s %ld >> %d\n%s %ld\n---------\n", oa, (long)a, hammingWeight64(a ^ b), ob, (long) b);
+
 }
 
-int hammerDistance(const char *str1, size_t lenStr1, const char *str2, size_t lenStr2) {
+int hammingDistance(const char *str1, size_t lenStr1, const char *str2, size_t lenStr2) {
     int distance = 0;
     distance += fabsf(lenStr1 - lenStr2) * 8;
     int len = fminf(lenStr1, lenStr2);
@@ -106,13 +111,13 @@ int hammerDistance(const char *str1, size_t lenStr1, const char *str2, size_t le
         nn++;
         if(nn >= 8) {
             nn = 0;
-            distance += hammerWeight64(n1 & n2);
+            distance += hammingWeight64(n1 ^ n2);
             n1 = 0; n2 = 0;
         }
-        printHammerDistance(n1, n2);
+        // printHammingDistance(n1, n2);
     }
     if(nn > 0) {
-        distance += hammerWeight64(n1 & n2);
+        distance += hammingWeight64(n1 ^ n2);
     }
     return distance;
 }

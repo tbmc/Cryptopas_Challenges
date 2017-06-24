@@ -5,6 +5,8 @@
 
 #include "utils/utils.h"
 #include "set1/crypto_challenge.h"
+#include "utils/sort.h"
+
 
 int strCmp(const char* s1, const char* s2)
 {
@@ -86,9 +88,30 @@ bool testEncryptRepeatedXor() {
 }
 
 bool testHammerWeight() {
-    printf(">>>%d\n", ((uint64_t) (1 << 40)));
     char *a = "this is a test", *b = "wokka wokka!!!";
-    printf("Distance : %d\n", hammerDistance(a, strlen(a), b, strlen(b)));
+    printf("Distance : %d\n", hammingDistance(a, strlen(a), b, strlen(b)));
+}
+
+bool testSort() {
+    int test[] = { 5, 3, 8, 85874, 4, 645, 455, 2, 5};
+    bubbleSort(test, 8, sizeof(int), &compInt, true);
+    for(int i = 0; i < 8; i++) {
+        printf("%d ", test[i]);
+    }
+    printf("\n");
+    bubbleSort(test, 8, sizeof(8), &compInt, false);
+    for(int i = 0; i < 8; i++) {
+        printf("%d ", test[i]);
+    }
+    printf("\n");
+
+}
+
+bool testFindLowestDistanceForKeySize() {
+    const char in[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laboru";
+    size_t len = strlen(in);
+
+    findKeySize(in, len, 2, 40);
 }
 
 int main(int argc, char *argv[]) {
@@ -99,7 +122,10 @@ int main(int argc, char *argv[]) {
     // testDecryptXor();
     // testDecryptXorFile();
     // testEncryptRepeatedXor();
-    testHammerWeight();
+    // testHammerWeight();
+    // testSort();
+    testFindLowestDistanceForKeySize();
+
 
     char scan[50];
     scanf("%s", scan);

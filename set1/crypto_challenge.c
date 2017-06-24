@@ -10,6 +10,7 @@
 
 #include "../utils/utils.h"
 #include "../score/score.h"
+#include "../utils/sort.h"
 
 #define BIN_2_BITS_RIGHT (0b00000011)
 #define BIN_2_BITS_LEFT  (0b11000000)
@@ -117,6 +118,44 @@ void encryptRepeatedXor(const char *in, size_t len, const char *key, size_t keyL
     }
     // out[ol] = '\0';
     *outLen = ol;
+}
+
+
+int compKeySizeDistancePair(void *a, void *b) {
+    KeySizeDistancePair *p = a, *q = b;
+    float r = p->distance - q->distance;
+    if(r > 0)
+        return 1;
+    return r == 0 ? 0 : -1;
+}
+
+void findKeySize(const char *cipherText, size_t lenCipherText, int minKeySize, int maxKeySize) {
+    char firstKeySize[100], secondKeySize[100];
+    KeySizeDistancePair results[maxKeySize - minKeySize + 1];
+    size_t idxResults = 0;
+
+    for(int keySize = minKeySize; keySize < maxKeySize; keySize++) {
+
+        strncpy(firstKeySize, cipherText, keySize);
+        firstKeySize[keySize] = '\0';
+
+        strncpy(secondKeySize, cipherText + keySize, keySize);
+        secondKeySize[keySize] = '\0';
+
+        int distance = hammingDistance(firstKeySize, keySize, secondKeySize, keySize);
+        float normalizedDistance = (float) distance / (float) keySize;
+        results[idxResults++] = (KeySizeDistancePair) {
+            .keySize = keySize,
+            .distance = normalizedDistance
+        };
+
+    }
+    bubbleSort(results, idxResults, sizeof(KeySizeDistancePair), &compKeySizeDistancePair, true);
+
+    for(int i = 0; i < idxResults; i++) {
+        KeySizeDistancePair p = results[i];
+        printf("%d %f\n", p.keySize, p.distance);
+    }
 }
 
 

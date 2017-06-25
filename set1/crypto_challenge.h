@@ -27,5 +27,9 @@ void encrypt_repeated_xor(const char *in, size_t len, const char *key, size_t ke
 
 void find_key_size(const char *cipher_text, size_t len_cipher_text, int min_key_size, int max_key_size);
 
+void decrypt_file6(const char *path);
+
+
+
 
 #endif //CRYPTOCHALLENGE_CRYPTO_CHALLENGE_H

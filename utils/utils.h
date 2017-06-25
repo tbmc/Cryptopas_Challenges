@@ -103,7 +103,13 @@ int hamming_distance(const char *str1, size_t len_str1, const char *str2, size_t
  */
 long get_file_size(const char *path);
 
-
+/**
+ * Read a file and remove new lines
+ * @param path Path of the file to read
+ * @param out Out string, where will be stocked the entire file
+ * @param file_size Size of the file, you need to pass it @see get_file_size
+ */
+void read_all_file_without_new_lines(const char *path, char *out, long file_size);
 
 
 

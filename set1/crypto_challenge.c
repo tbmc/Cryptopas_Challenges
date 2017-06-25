@@ -179,27 +179,14 @@ void find_key_size(const char *cipher_text, size_t len_cipher_text, int min_key_
 
 void decrypt_file6(const char *path)
 {
-    FILE *f;
-    size_t max_size = 250;
-    char line[max_size];
+    long file_size = get_file_size(path);
+    char base64_cipher_text[file_size + 1], cipher_text[file_size + 1];
+    read_all_file_without_new_lines(path, base64_cipher_text, file_size);
 
-    f = fopen(path, "r");
-    if (f == NULL)
-    {
-        printf("Error\n");
-        return;
-    }
+    size_t len_cipher_text;
+    decode_char64(base64_cipher_text, file_size, cipher_text, &len_cipher_text);
 
-    size_t len;
-
-    while (fgets(line, max_size, f) != NULL)
-    {
-        len = strlen(line) - 1;
-        line[len] = '\0';
-
-    }
-    fclose(f);
-
+    
 }
 
 

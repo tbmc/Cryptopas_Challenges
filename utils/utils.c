@@ -190,21 +190,29 @@ long get_file_size(const char *path) {
     return len;
 }
 
-void read_all_file_without_new_lines(const char *path, char *out, long fileSize) {
+void read_all_file_without_new_lines(const char *path, char *out, long file_size) {
     FILE *f = fopen(path, "r");
     if(f == NULL) {
         printf("Error\n");
         return;
     }
 
-    long currPos = 0, lastPos = 0;
-    while(fgets(line, fileSize, f) != NULL) {
-
-        line[len] = '\0';
-
+    int c;
+    long out_index = 0;
+    while((c = getc(f)) != EOF) {
+        if(c == '\n' || c == '\r')
+            continue;
+        out[out_index++] = c;
     }
+    out[out_index] = '\0';
+    /*
+    long curr_pos = 0;
+    while(fgets(out, file_size + curr_pos, f) != NULL) {
+        curr_pos = ftell(f);
+        out[--curr_pos] = '\0';
+    }
+    */
     fclose(f);
-
 }
 
 

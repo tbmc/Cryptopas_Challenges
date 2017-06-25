@@ -13,7 +13,23 @@
  * @param code number in [0, 63]
  * @return
  */
-uint8_t getChar64FromCode(uint8_t code);
+uint8_t get_char64_from_code(uint8_t code);
+
+/**
+ * Return corresponding code from char in base 64
+ * @param a Char in base 64
+ * @return Code corresponding
+ */
+uint8_t get_code_from_char64(char a);
+
+/**
+ * Decode a string in base 64 to a normal string
+ * @param in String of base-64 symbols
+ * @param len Length
+ * @param out
+ * @param outLen
+ */
+void decode_char64(const char *in, size_t len, char *out, size_t *outLen);
 
 /**
  * Get code from hex char
@@ -21,7 +37,7 @@ uint8_t getChar64FromCode(uint8_t code);
  * @param c hex digit
  * @return
  */
-uint8_t getCodeFromHex(char c);
+uint8_t get_code_from_hex(char c);
 
 /**
  * Get hex digit from code
@@ -29,7 +45,7 @@ uint8_t getCodeFromHex(char c);
  * @param c
  * @return
  */
-char getHexFromCode(uint8_t c);
+char get_hex_from_code(uint8_t c);
 
 /**
  * Get a char from a string or 0 if i >= len
@@ -38,7 +54,7 @@ char getHexFromCode(uint8_t c);
  * @param i Index of the element to get
  * @return element at the given index or 0
  */
-char getFromIn(const char *in, size_t len, int i);
+char get_from_in(const char *in, size_t len, int i);
 
 /**
  * Convert a hex string to a char string
@@ -47,7 +63,7 @@ char getFromIn(const char *in, size_t len, int i);
  * @param len Length of in
  * @param out Output char string
  */
-void hexCharToArray(const char *in, size_t len, uint8_t *out);
+void hex_char_to_array(const char *in, size_t len, uint8_t *out);
 
 /**
  * /!\ Not tested !
@@ -57,7 +73,7 @@ void hexCharToArray(const char *in, size_t len, uint8_t *out);
  * @param i 32 bit number
  * @return
  */
-int hammingWeight32(uint32_t i);
+int hamming_weight32(uint32_t i);
 
 /**
  * Return Hamming Weight for a 64 bit number
@@ -65,7 +81,7 @@ int hammingWeight32(uint32_t i);
  * @param x 64 bit number
  * @return Number of 1s in x
  */
-int hammingWeight64(uint64_t x);
+int hamming_weight64(uint64_t x);
 
 /**
  * Calculate the number of bit which are different in the 2 strings
@@ -73,11 +89,28 @@ int hammingWeight64(uint64_t x);
  * are different, it multiply difference by 8
  * (because 8 bit in each byte)
  * @param str1 String 1
- * @param lenStr1 Length of str1
+ * @param len_str1 Length of str1
  * @param str2 String 2
- * @param lenStr2 Length of str2
+ * @param len_str2 Length of str2
  * @return Number of bit different
  */
-int hammingDistance(const char *str1, size_t lenStr1, const char *str2, size_t lenStr2);
+int hamming_distance(const char *str1, size_t len_str1, const char *str2, size_t len_str2);
+
+/**
+ * Return size of file
+ * @param path Relative path of the file
+ * @return Size of the file in bytes
+ */
+long get_file_size(const char *path);
+
+
+
+
+
+
+
+
+
+
 
 #endif //CRYPTOCHALLENGE_UTILS_H

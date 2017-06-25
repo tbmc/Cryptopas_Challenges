@@ -8,22 +8,24 @@
 #include <strings.h>
 
 
-typedef struct {
+typedef struct
+{
     size_t keySize;
     float distance;
 } KeySizeDistancePair;
 
 
-void convertHexToBase64(const char *in, size_t len, char *out, size_t *outLen);
+void convert_hex_to_base64(const char *in, size_t len, char *out, size_t *outLen);
 
-void fnXor(const char *in1, const char *in2, size_t len, char *out);
+void fn_xor(const char *in1, const char *in2, size_t len, char *out);
 
-void decryptXor(const char *inString, size_t lenIn, char *out, float *outScore, char *outKey);
+void decrypt_xor(const char *in_string, size_t len_in, char *out, float *out_score, char *out_key);
 
-void findEncryptedLineInFile(const char *path);
+void find_encrypted_line_in_file(const char *path);
 
-void encryptRepeatedXor(const char *in, size_t len, const char *key, size_t keyLen, char *out, size_t *outLen);
+void encrypt_repeated_xor(const char *in, size_t len, const char *key, size_t key_len, char *out, size_t *out_len);
 
-void findKeySize(const char *cipherText, size_t lenCipherText, int minKeySize, int maxKeySize);
+void find_key_size(const char *cipher_text, size_t len_cipher_text, int min_key_size, int max_key_size);
+
 
 #endif //CRYPTOCHALLENGE_CRYPTO_CHALLENGE_H

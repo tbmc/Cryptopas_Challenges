@@ -17,7 +17,7 @@
  * @param score
  * @return
  */
-bool getCharScore(const char *in, size_t len, float *score);
+bool get_char_score(const char *in, size_t len, float *score);
 
 /**
  * Calculate a score for a string.
@@ -28,6 +28,6 @@ bool getCharScore(const char *in, size_t len, float *score);
  * @param outChi2 Pointer to get result in case of success
  * @return true if evaluation is successful or false if not
  */
-bool getChi2(const char *in, size_t len, float *outChi2);
+bool get_chi2(const char *in, size_t len, float *outChi2);
 
 #endif //CRYPTOCHALLENGE_SCORE_H

@@ -13,7 +13,7 @@ float english_freq[] = {
         0.00978, 0.02360, 0.00150, 0.01974, 0.00074,                    // V-Z
 };
 
-bool getChi2(const char *in, size_t len, float *outChi2) {
+bool get_chi2(const char *in, size_t len, float *outChi2) {
     int count[ALPHABET_SIZE];
     for(int i = 0; i < ALPHABET_SIZE; i++)
         count[i] = 0;
@@ -49,6 +49,6 @@ bool getChi2(const char *in, size_t len, float *outChi2) {
     return true;
 }
 
-bool getCharScore(const char *in, size_t len, float *score) {
-    return getChi2(in, len, score);
+bool get_char_score(const char *in, size_t len, float *score) {
+    return get_chi2(in, len, score);
 }

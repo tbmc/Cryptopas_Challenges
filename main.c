@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <strings.h>
 #include <stdbool.h>
 
@@ -30,7 +31,7 @@ bool testHexToBase64() {
     size_t len = strlen(in);
     size_t outLen;
 
-    convertHexToBase64(in, len, out, &outLen);
+    convert_hex_to_base64(in, len, out, &outLen);
     out[outLen] = '\0';
 
     if(strCmp(out, wanted) != 0) {
@@ -49,7 +50,7 @@ bool testXor() {
     size_t len = strlen(a);
     char out[len + 1];
 
-    fnXor(a, b, len, out);
+    fn_xor(a, b, len, out);
     out[len] = '\0';
 
     if(strCmp(out, wanted) != 0) {
@@ -67,13 +68,13 @@ bool testDecryptXor() {
     size_t len = strlen(a);
     char b[150];
     float osef1; char osef2;
-    decryptXor(a, len, b, &osef1, &osef2);
+    decrypt_xor(a, len, b, &osef1, &osef2);
     b[len] = '\0';
     printf("%s\n", b);
 }
 
 bool testDecryptXorFile() {
-    findEncryptedLineInFile("others/4.txt");
+    find_encrypted_line_in_file("others/4.txt");
 }
 
 bool testEncryptRepeatedXor() {
@@ -82,24 +83,24 @@ bool testEncryptRepeatedXor() {
     const char *key = "ICE";
     char out[500];
     size_t len;
-    encryptRepeatedXor(in, strlen(in), key, strlen(key), out, &len);
+    encrypt_repeated_xor(in, strlen(in), key, strlen(key), out, &len);
     out[len] = '\0';
     printf("%s %d\n", out, strcmp(out, wanted));
 }
 
 bool testHammerWeight() {
     char *a = "this is a test", *b = "wokka wokka!!!";
-    printf("Distance : %d\n", hammingDistance(a, strlen(a), b, strlen(b)));
+    printf("Distance : %d\n", hamming_distance(a, strlen(a), b, strlen(b)));
 }
 
 bool testSort() {
     int test[] = { 5, 3, 8, 85874, 4, 645, 455, 2, 5};
-    bubbleSort(test, 8, sizeof(int), &compInt, true);
+    bubble_sort(test, 8, sizeof(int), &comp_int, true);
     for(int i = 0; i < 8; i++) {
         printf("%d ", test[i]);
     }
     printf("\n");
-    bubbleSort(test, 8, sizeof(8), &compInt, false);
+    bubble_sort(test, 8, sizeof(8), &comp_int, false);
     for(int i = 0; i < 8; i++) {
         printf("%d ", test[i]);
     }
@@ -111,7 +112,7 @@ bool testFindLowestDistanceForKeySize() {
     const char in[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laboru";
     size_t len = strlen(in);
 
-    findKeySize(in, len, 2, 40);
+    find_key_size(in, len, 2, 40);
 }
 
 int main(int argc, char *argv[]) {
@@ -124,7 +125,9 @@ int main(int argc, char *argv[]) {
     // testEncryptRepeatedXor();
     // testHammerWeight();
     // testSort();
-    testFindLowestDistanceForKeySize();
+    // testFindLowestDistanceForKeySize();
+
+    printf("%d %d\n", sizeof(int), sizeof(long));
 
 
     char scan[50];

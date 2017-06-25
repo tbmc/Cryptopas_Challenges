@@ -17,7 +17,7 @@
  * @param b int 2
  * @return 1 if a > b, 0 if a == b and -1 if a < b
  */
-int compInt(void *a, void *b);
+int comp_int(void *a, void *b);
 
 /**
  * Swap 2 elements of unknown type
@@ -25,18 +25,18 @@ int compInt(void *a, void *b);
  * @param b element 2
  * @param len sizeof(type)
  */
-void swapUniversal(void *a, void *b, size_t len);
+void swap_universal(void *a, void *b, size_t len);
 
 /**
  * Sort an array
  *
  * @param array Array to sort. It will be modified.
- * @param arrayLen Length of array
- * @param typeSize sizeof(type)
+ * @param array_len Length of array
+ * @param type_size sizeof(type)
  * @param comp Function used to do comparison. It parameters has to be voids and return an int
- * @param increasingOrder Sort with increasing order if true, or with decreasing order if false
+ * @param increasing_order Sort with increasing order if true, or with decreasing order if false
  */
-void bubbleSort(void *array, size_t arrayLen, size_t typeSize, int (*comp)(void *a, void *b), bool increasingOrder);
+void bubble_sort(void *array, size_t array_len, size_t type_size, int (*comp)(void *a, void *b), bool increasing_order);
 
 
 #endif //CRYPTOCHALLENGE_TSORT_H

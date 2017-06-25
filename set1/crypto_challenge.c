@@ -16,50 +16,59 @@
 #define BIN_2_BITS_LEFT  (0b11000000)
 #define BIN_4_BITS_RIGHT (0b00001111)
 
-void convertHexToBase64(const char *in, size_t len, char *out, size_t *outLen) {
+void convert_hex_to_base64(const char *in, size_t len, char *out, size_t *outLen)
+{
     size_t ol = 0;
     uint8_t a1, a2, a3, o1, o2;
-    for(int i = 0; i < len; i += 3) {
-        a1 = getCodeFromHex(getFromIn(in, len, i));
-        a2 = getCodeFromHex(getFromIn(in, len, i + 1));
-        a3 = getCodeFromHex(getFromIn(in, len, i + 2));
+    for (int i = 0; i < len; i += 3)
+    {
+        a1 = get_code_from_hex(get_from_in(in, len, i));
+        a2 = get_code_from_hex(get_from_in(in, len, i + 1));
+        a3 = get_code_from_hex(get_from_in(in, len, i + 2));
 
         o1 = (a1 << 2) | (a2 >> 2);
         o2 = ((a2 & BIN_2_BITS_RIGHT) << 4) | a3;
 
-        out[ol++] = getChar64FromCode(o1);
-        out[ol++] = getChar64FromCode(o2);
+        out[ol++] = get_char64_from_code(o1);
+        out[ol++] = get_char64_from_code(o2);
 
     }
     *outLen = ol;
 }
 
-void fnXor(const char *in1, const char *in2, size_t len, char *out) {
-    for(int i = 0; i < len; i++) {
-        uint8_t c = getCodeFromHex(in1[i]) ^ getCodeFromHex(in2[i]);
-        out[i] =  getHexFromCode(c);
+void fn_xor(const char *in1, const char *in2, size_t len, char *out)
+{
+    for (int i = 0; i < len; i++)
+    {
+        uint8_t c = get_code_from_hex(in1[i]) ^get_code_from_hex(in2[i]);
+        out[i] = get_hex_from_code(c);
     }
 }
 
-void decryptXor1Char(const char *in, size_t len, char key, char *out) {
-    for(int i = 0; i < len; i++) {
+void decryptXor1Char(const char *in, size_t len, char key, char *out)
+{
+    for (int i = 0; i < len; i++)
+    {
         out[i] = in[i] ^ key;
     }
 }
 
-void decryptXor(const char *inString, size_t lenIn, char *out, float *outScore, char *outKey) {
-    size_t len = lenIn / 2;
-    uint8_t inArray[len];
-    hexCharToArray(inString, lenIn, inArray);
+void decrypt_xor(const char *in_string, size_t len_in, char *out, float *out_score, char *out_key)
+{
+    size_t len = len_in / 2;
+    uint8_t in_array[len];
+    hex_char_to_array(in_string, len_in, in_array);
 
     char test[len + 1], best[len], key;
-    float maxScore = FLT_MAX, score;
-    for(uint16_t i = 0; i < 256; i++) {
-        decryptXor1Char(inArray, len, i, test);
+    float max_score = FLT_MAX, score;
+    for (uint16_t i = 0; i < 256; i++)
+    {
+        decryptXor1Char(in_array, len, i, test);
         test[len] = '\0';
-        bool b = getCharScore(test, len, &score);
-        if(b && score < maxScore) {
-            maxScore = score;
+        bool b = get_char_score(test, len, &score);
+        if (b && score < max_score)
+        {
+            max_score = score;
             key = i;
             strcpy(best, test);
             // printf("\n%f %s\n", score, test);
@@ -67,95 +76,130 @@ void decryptXor(const char *inString, size_t lenIn, char *out, float *outScore, 
     }
 
     strcpy(out, best);
-    *outScore = score;
-    *outKey = key;
+    *out_score = score;
+    *out_key = key;
 }
 
-void findEncryptedLineInFile(const char *path) {
+void find_encrypted_line_in_file(const char *path)
+{
     FILE *f;
-    size_t maxSize = 250;
-    char line[maxSize];
+    size_t max_size = 250;
+    char line[max_size];
 
     f = fopen(path, "r");
-    if(f == NULL) {
+    if (f == NULL)
+    {
         printf("Error\n");
         return;
     }
 
     size_t len;
-    char best[maxSize], decoded[maxSize], key;
-    float score = FLT_MAX, tempScore;
-    while(fgets(line, maxSize, f) != NULL) {
+    char best[max_size], decoded[max_size], key;
+    float score = FLT_MAX, temp_score;
+    while (fgets(line, max_size, f) != NULL)
+    {
         len = strlen(line) - 1;
         line[len] = '\0';
-        decryptXor(line, len, decoded, &tempScore, &key);
+        decrypt_xor(line, len, decoded, &temp_score, &key);
 
-        if(strlen(decoded) != len / 2)
+        if (strlen(decoded) != len / 2)
             continue;
-        if(tempScore < score) {
-            score = tempScore;
+        if (temp_score < score)
+        {
+            score = temp_score;
             strcpy(best, decoded);
-            // printf("%f | temp : %s\n", tempScore, decoded);
+            // printf("%f | temp : %s\n", temp_score, decoded);
             printf(":::::::");
         }
-        printf("%d %d %s %c\n", (int) tempScore, (int) score, decoded, key);
+        printf("%d %d %s %c\n", (int) temp_score, (int) score, decoded, key);
     }
     fclose(f);
     printf("%f %s\n", score, best);
 }
 
 
-void encryptRepeatedXor(const char *in, size_t len, const char *key, size_t keyLen, char *out, size_t *outLen) {
+void encrypt_repeated_xor(const char *in, size_t len, const char *key, size_t key_len, char *out, size_t *out_len)
+{
     size_t ol = 0;
-    size_t keyPointer = 0;
-    for(int i = 0; i < len; i++) {
+    size_t key_pointer = 0;
+    for (int i = 0; i < len; i++)
+    {
         char a = in[i];
-        char k = key[keyPointer];
-        keyPointer = (keyPointer + 1) % keyLen;
+        char k = key[key_pointer];
+        key_pointer = (key_pointer + 1) % key_len;
         char e = a ^ k;
-        out[ol++] = getHexFromCode(e >> 4);
-        out[ol++] = getHexFromCode(e & BIN_4_BITS_RIGHT);
+        out[ol++] = get_hex_from_code(e >> 4);
+        out[ol++] = get_hex_from_code(e & BIN_4_BITS_RIGHT);
     }
     // out[ol] = '\0';
-    *outLen = ol;
+    *out_len = ol;
 }
 
 
-int compKeySizeDistancePair(void *a, void *b) {
+int comp_key_size_distance_pair(void *a, void *b)
+{
     KeySizeDistancePair *p = a, *q = b;
     float r = p->distance - q->distance;
-    if(r > 0)
+    if (r > 0)
         return 1;
     return r == 0 ? 0 : -1;
 }
 
-void findKeySize(const char *cipherText, size_t lenCipherText, int minKeySize, int maxKeySize) {
+void find_key_size(const char *cipher_text, size_t len_cipher_text, int min_key_size, int max_key_size)
+{
     char firstKeySize[100], secondKeySize[100];
-    KeySizeDistancePair results[maxKeySize - minKeySize + 1];
+    KeySizeDistancePair results[max_key_size - min_key_size + 1];
     size_t idxResults = 0;
 
-    for(int keySize = minKeySize; keySize < maxKeySize; keySize++) {
+    for (size_t keySize = min_key_size; keySize < max_key_size; keySize++)
+    {
 
-        strncpy(firstKeySize, cipherText, keySize);
+        strncpy(firstKeySize, cipher_text, keySize);
         firstKeySize[keySize] = '\0';
 
-        strncpy(secondKeySize, cipherText + keySize, keySize);
+        strncpy(secondKeySize, cipher_text + keySize, keySize);
         secondKeySize[keySize] = '\0';
 
-        int distance = hammingDistance(firstKeySize, keySize, secondKeySize, keySize);
+        int distance = hamming_distance(firstKeySize, keySize, secondKeySize, keySize);
         float normalizedDistance = (float) distance / (float) keySize;
         results[idxResults++] = (KeySizeDistancePair) {
-            .keySize = keySize,
-            .distance = normalizedDistance
+                .keySize = keySize,
+                .distance = normalizedDistance
         };
 
     }
-    bubbleSort(results, idxResults, sizeof(KeySizeDistancePair), &compKeySizeDistancePair, true);
+    bubble_sort(results, idxResults, sizeof(KeySizeDistancePair), &comp_key_size_distance_pair, true);
 
-    for(int i = 0; i < idxResults; i++) {
+    for (int i = 0; i < idxResults; i++)
+    {
         KeySizeDistancePair p = results[i];
         printf("%d %f\n", p.keySize, p.distance);
     }
+}
+
+void decrypt_file6(const char *path)
+{
+    FILE *f;
+    size_t max_size = 250;
+    char line[max_size];
+
+    f = fopen(path, "r");
+    if (f == NULL)
+    {
+        printf("Error\n");
+        return;
+    }
+
+    size_t len;
+
+    while (fgets(line, max_size, f) != NULL)
+    {
+        len = strlen(line) - 1;
+        line[len] = '\0';
+
+    }
+    fclose(f);
+
 }
 
 
